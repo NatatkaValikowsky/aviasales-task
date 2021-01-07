@@ -1,0 +1,30 @@
+.result-filters{
+    width:100%;
+    display:flex;
+    border-radius: 5px;
+    border: 1px solid #DFE5EC;
+    overflow: hidden;
+}
+
+.result-filters__field{
+    display:none;
+}
+
+.result-filters__label{
+    width:50%;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #4A4A4A;
+    cursor: pointer;
+    padding:15px;
+    background-color: #fff;
+}
+
+.result-filters__field:checked + .result-filters__label{
+    background: #2196F3;
+    border-color: #2196F3;
+    color: #fff;
+}

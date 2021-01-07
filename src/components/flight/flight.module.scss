@@ -1,0 +1,55 @@
+.result-item{
+    background-color: #ffffff;
+    margin-top: 20px;
+    border-radius:5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.result-item__header{
+    display:flex;
+    justify-content: space-between;
+    padding:26px 20px;
+}
+
+.price{
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 24px;
+    color: #2196F3;
+}
+
+.fly-info{
+    display:flex;
+    justify-content: space-between;
+    padding:20px;
+}
+
+.route{
+    list-style: none;
+}
+
+.length{
+    list-style: none;
+}
+
+.stops{
+    list-style: none;
+}
+
+.info-item{
+    display:flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.info-item__title,
+.info-item__value{
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    text-transform: uppercase;
+}
+
+.info-item__title{
+    color: #A0B0B9;
+}

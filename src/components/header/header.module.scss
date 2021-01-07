@@ -1,0 +1,16 @@
+.logo-block{
+    display: flex;
+    justify-content: center;
+    padding:50px 0;
+}
+
+@media(max-width: 600px){
+    .logo-block{
+        padding:10px 0;
+    }
+}
+
+.logo__img{
+    width:100px;
+    height:auto;
+}
