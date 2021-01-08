@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {updateFilters} from "../../actions";
+import { updateFilters } from '../../actions';
 import classes from './transfer-count-filter.module.scss';
 
-const TransferCountFilter = ({stops, updateFiltersFunc}) => {
-	const checkedCount = Object.values(stops).reduce((acc, value) => value ? acc + 1 : acc, 0);
+const TransferCountFilter = ({ stops, updateFiltersFunc }) => {
+	const checkedCount = Object.values(stops).reduce((acc, value) => (value ? acc + 1 : acc), 0);
 
 	return (
 		<aside className={`${classes['content-block__filters']} ${classes['filters-block']}`}>
@@ -14,11 +14,12 @@ const TransferCountFilter = ({stops, updateFiltersFunc}) => {
 				<h3 className={classes['aside-filters__title']}>Количество пересадок</h3>
 
 				<fieldset className={classes['aside-filters__group']}>
-					<input className={classes['aside-filters__field']}
-						   type="checkbox"
-						   id="transfer-var-all"
-						   onChange={(event) => updateFiltersFunc('all', event.target.checked)}
-						   checked={checkedCount === Object.keys(stops).length}
+					<input
+						className={classes['aside-filters__field']}
+						type="checkbox"
+						id="transfer-var-all"
+						onChange={(event) => updateFiltersFunc('all', event.target.checked)}
+						checked={checkedCount === Object.keys(stops).length}
 					/>
 					<label className={classes['aside-filters__label']} htmlFor="transfer-var-all">
 						Все
@@ -78,20 +79,20 @@ const TransferCountFilter = ({stops, updateFiltersFunc}) => {
 				</fieldset>
 			</form>
 		</aside>
-	)
+	);
 };
 
-const mapStateToProps = state => ({
-	stops: state.filters.stops
+const mapStateToProps = (state) => ({
+	stops: state.filters.stops,
 });
 
 const mapDispatchToProps = {
-	updateFiltersFunc: updateFilters
+	updateFiltersFunc: updateFilters,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransferCountFilter);
 
 TransferCountFilter.propTypes = {
 	stops: PropTypes.objectOf(PropTypes.bool).isRequired,
-	updateFiltersFunc: PropTypes.func.isRequired
+	updateFiltersFunc: PropTypes.func.isRequired,
 };

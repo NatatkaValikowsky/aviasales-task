@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {updateSort} from "../../actions";
+import { updateSort } from '../../actions';
 import classes from './price-filter.module.scss';
 
-const PriceFilter = ({sort, updateSortFunc}) => (
+const PriceFilter = ({ sort, updateSortFunc }) => (
 	<form className={classes['result-filters']}>
 		<input
 			className={classes['result-filters__field']}
@@ -15,9 +15,7 @@ const PriceFilter = ({sort, updateSortFunc}) => (
 			onChange={() => updateSortFunc('cheap')}
 			checked={sort === 'cheap'}
 		/>
-		<label
-			className={classes['result-filters__label']}
-			htmlFor="cheap">
+		<label className={classes['result-filters__label']} htmlFor="cheap">
 			Самый дешевый
 		</label>
 
@@ -29,23 +27,21 @@ const PriceFilter = ({sort, updateSortFunc}) => (
 			onChange={() => updateSortFunc('fast')}
 			checked={sort === 'fast'}
 		/>
-		<label
-			className={classes['result-filters__label']}
-			htmlFor="faster">
+		<label className={classes['result-filters__label']} htmlFor="faster">
 			Самый быстрый
 		</label>
 	</form>
 );
 
 const mapDispatchToProps = {
-	updateSortFunc: updateSort
+	updateSortFunc: updateSort,
 };
 
-const mapStateToProps = (state) => ({sort: state.sort});
+const mapStateToProps = (state) => ({ sort: state.sort });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PriceFilter);
 
 PriceFilter.propTypes = {
 	sort: PropTypes.string.isRequired,
-	updateSortFunc: PropTypes.func.isRequired
+	updateSortFunc: PropTypes.func.isRequired,
 };
