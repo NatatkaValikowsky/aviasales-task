@@ -3,7 +3,7 @@ import Header from '../header';
 import './app.css';
 import TransferCountFilter from '../transfer-count-filter';
 import PriceFilter from '../price-filter';
-import FlightList from '../flight-list';
+import TicketList from '../ticket-list';
 
 const App = () => (
 	<div className="wrapper">
@@ -14,7 +14,7 @@ const App = () => (
 			<section className="content-block__results results-block">
 				<PriceFilter />
 
-				<FlightList />
+				<TicketList />
 			</section>
 		</main>
 	</div>
