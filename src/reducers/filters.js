@@ -2,10 +2,10 @@ import { UPDATE_FILTERS, UPDATE_FILTERS_SET_ALL } from '../actionTypes';
 
 const initialState = {
 	stops: {
-		0: false,
-		1: false,
-		2: false,
-		3: false,
+		0: true,
+		1: true,
+		2: true,
+		3: true,
 	},
 };
 
