@@ -44,6 +44,7 @@ body{
 .content-block{
     display: flex;
     align-items: flex-start;
+    justify-content: center;
 }
 
 @media(max-width: 600px){
@@ -56,6 +57,7 @@ body{
 .content-block__results{
     margin-left: 20px;
     flex-grow: 1;
+    max-width: 502px;
 }
 
 @media(max-width: 600px){

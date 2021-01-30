@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { updateFilters } from '../../actions';
+
+import { FILTER_MAP } from '../../constants';
+
 import classes from './transfer-count-filter.module.scss';
 
 const TransferCountFilter = ({ stops, updateFiltersFunc }) => {
@@ -26,57 +29,20 @@ const TransferCountFilter = ({ stops, updateFiltersFunc }) => {
 					</label>
 				</fieldset>
 
-				<fieldset className={classes['aside-filters__group']}>
-					<input
-						className={classes['aside-filters__field']}
-						type="checkbox"
-						id="transfer-var-without"
-						onChange={() => updateFiltersFunc(0)}
-						checked={stops[0]}
-					/>
-					<label className={classes['aside-filters__label']} htmlFor="transfer-var-without">
-						Без пересадок
-					</label>
-				</fieldset>
-
-				<fieldset className={classes['aside-filters__group']}>
-					<input
-						className={classes['aside-filters__field']}
-						type="checkbox"
-						id="transfer-var-one"
-						onChange={() => updateFiltersFunc(1)}
-						checked={stops[1]}
-					/>
-					<label className={classes['aside-filters__label']} htmlFor="transfer-var-one">
-						1 пересадка
-					</label>
-				</fieldset>
-
-				<fieldset className={classes['aside-filters__group']}>
-					<input
-						className={classes['aside-filters__field']}
-						type="checkbox"
-						id="transfer-var-two"
-						onChange={() => updateFiltersFunc(2)}
-						checked={stops[2]}
-					/>
-					<label className={classes['aside-filters__label']} htmlFor="transfer-var-two">
-						2 пересадки
-					</label>
-				</fieldset>
-
-				<fieldset className={classes['aside-filters__group']}>
-					<input
-						className={classes['aside-filters__field']}
-						type="checkbox"
-						id="transfer-var-three"
-						onChange={() => updateFiltersFunc(3)}
-						checked={stops[3]}
-					/>
-					<label className={classes['aside-filters__label']} htmlFor="transfer-var-three">
-						3 пересадки
-					</label>
-				</fieldset>
+				{FILTER_MAP.map((el) => (
+					<fieldset className={classes['aside-filters__group']}>
+						<input
+							className={classes['aside-filters__field']}
+							type="checkbox"
+							id={el.inputId}
+							onChange={() => updateFiltersFunc(el.id)}
+							checked={stops[el.id]}
+						/>
+						<label className={classes['aside-filters__label']} htmlFor={el.inputId}>
+							{el.text}
+						</label>
+					</fieldset>
+				))}
 			</form>
 		</aside>
 	);

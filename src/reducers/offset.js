@@ -1,15 +1,15 @@
-import { INIT_TICKETS_OFFSET, LOAD_MORE_TICKETS, RESET_TICKETS_OFFSET } from '../actionTypes';
+import { LOAD_MORE_TICKETS, UPDATE_SORT } from '../actionTypes';
 
-const initialState = 0;
+import { OFFSET_PART_COUNT } from '../constants';
 
-export default (state = initialState, { type, payload }) => {
+const initialState = OFFSET_PART_COUNT;
+
+export default (state = initialState, { type }) => {
 	switch (type) {
-		case INIT_TICKETS_OFFSET:
-			return payload;
-		case RESET_TICKETS_OFFSET:
-			return payload;
+		case UPDATE_SORT:
+			return OFFSET_PART_COUNT;
 		case LOAD_MORE_TICKETS:
-			return payload;
+			return state + OFFSET_PART_COUNT;
 		default:
 			return state;
 	}

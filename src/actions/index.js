@@ -8,26 +8,16 @@ import {
 	GET_SEARCH_ID_START,
 	GET_SEARCH_ID_SUCCESS,
 	GET_SEARCH_ID_FAILURE,
-	INIT_TICKETS_OFFSET,
-	RESET_TICKETS_OFFSET,
 	LOAD_MORE_TICKETS,
 	FETCH_TICKETS_STOPPED,
-	HIDE_ERROR,
 } from '../actionTypes';
 
-export const updateSort = (type) => (dispatch, getState) => {
-	const { ticketsPartCount } = getState();
+import ApiService from '../services/api-service';
 
-	dispatch({
-		type: UPDATE_SORT,
-		payload: type,
-	});
-
-	dispatch({
-		type: RESET_TICKETS_OFFSET,
-		payload: ticketsPartCount,
-	});
-};
+export const updateSort = (type) => ({
+	type: UPDATE_SORT,
+	payload: type,
+});
 
 export const updateFilters = (key, isChecked) => (dispatch) => {
 	if (key === 'all') {
@@ -49,14 +39,11 @@ export const getSearchId = () => async (dispatch) => {
 	});
 
 	try {
-		const res = await fetch('https://front-test.beta.aviasales.ru/search');
-		if (res.ok) {
-			const data = await res.json();
-			dispatch({
-				type: GET_SEARCH_ID_SUCCESS,
-				payload: data.searchId,
-			});
-		}
+		const res = await ApiService.getSearchId();
+		dispatch({
+			type: GET_SEARCH_ID_SUCCESS,
+			payload: res,
+		});
 	} catch (err) {
 		dispatch({
 			type: GET_SEARCH_ID_FAILURE,
@@ -68,26 +55,20 @@ export const getSearchId = () => async (dispatch) => {
 
 const getTicketPart = async (dispatch, searchId) => {
 	try {
-		const res = await fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${searchId}`);
+		const res = await ApiService.getTicketsPart(searchId);
 		if (res.ok) {
-			const data = await res.json();
 			dispatch({
 				type: FETCH_TICKETS_SUCCESS,
-				payload: data.tickets,
+				payload: res.tickets,
 			});
 
-			if (data.stop) {
+			if (res.stop) {
 				dispatch({
 					type: FETCH_TICKETS_STOPPED,
 				});
 				return;
 			}
-
-			setTimeout(async () => {
-				await getTicketPart(dispatch, searchId);
-			}, 100);
-		} else if (res.status === 500) {
-			throw new Error('Server Error');
+			await getTicketPart(dispatch, searchId);
 		}
 	} catch (err) {
 		dispatch({
@@ -96,11 +77,7 @@ const getTicketPart = async (dispatch, searchId) => {
 			payload: err,
 		});
 
-		setTimeout(() => {
-			dispatch({
-				type: HIDE_ERROR,
-			});
-		}, 5000);
+		await getTicketPart(dispatch, searchId);
 	}
 };
 
@@ -112,15 +89,6 @@ export const fetchTickets = () => async (dispatch, getState) => {
 	});
 
 	await getTicketPart(dispatch, searchId);
-};
-
-export const initTicketsOffset = () => async (dispatch, getState) => {
-	const { ticketsPartCount } = getState();
-
-	dispatch({
-		type: INIT_TICKETS_OFFSET,
-		payload: ticketsPartCount,
-	});
 };
 
 export const loadMoreTickets = () => (dispatch, getState) => {

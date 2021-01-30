@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 
 import Ticket from '../ticket';
 import NotFound from '../not-found';
-import { getSearchId, fetchTickets, initTicketsOffset, loadMoreTickets } from '../../actions';
+import { getSearchId, fetchTickets, loadMoreTickets } from '../../actions';
+
+import { OFFSET_PART_COUNT } from '../../constants';
 
 import getTickets from '../../selectors';
 
@@ -12,8 +14,7 @@ import classes from './ticket-list.module.scss';
 
 class TicketList extends Component {
 	async componentDidMount() {
-		const { getSearchIdFunc, fetchTicketsFunc, initTicketsOffsetFunc } = this.props;
-		initTicketsOffsetFunc();
+		const { getSearchIdFunc, fetchTicketsFunc } = this.props;
 		await getSearchIdFunc();
 		await fetchTicketsFunc();
 	}
@@ -33,7 +34,7 @@ class TicketList extends Component {
 	}
 
 	render() {
-		const { tickets, isStopTickets, ticketsPartCount, loadMoreTicketsFunc, isStopFetching, error } = this.props;
+		const { tickets, isStopTickets, loadMoreTicketsFunc, isStopFetching } = this.props;
 
 		const isSearching = !isStopFetching ? (
 			<div className={classes['tickets-are-searching']}>Идет поиск билетов...</div>
@@ -42,13 +43,11 @@ class TicketList extends Component {
 		const loadMoreBtn =
 			!isStopTickets && tickets.length > 0 ? (
 				<button type="button" className={classes['load-more-btn']} onClick={loadMoreTicketsFunc}>
-					Загрузить еще {ticketsPartCount} билетов
+					Загрузить еще {OFFSET_PART_COUNT} билетов
 				</button>
 			) : null;
 
-		const notFoundBlock = tickets.length === 0 ? <NotFound /> : null;
-
-		const errorBlock = error ? <div className={classes['error-block']}>Ошибка при получении данных</div> : null;
+		const notFoundBlock = isStopFetching && tickets.length === 0 ? <NotFound /> : null;
 
 		return (
 			<ul className={classes['result-items']}>
@@ -56,7 +55,6 @@ class TicketList extends Component {
 				{tickets.map((item) => this.renderTicket(item))}
 				{notFoundBlock}
 				{loadMoreBtn}
-				{errorBlock}
 			</ul>
 		);
 	}
@@ -65,7 +63,6 @@ class TicketList extends Component {
 const mapDispatchToProps = {
 	fetchTicketsFunc: fetchTickets,
 	getSearchIdFunc: getSearchId,
-	initTicketsOffsetFunc: initTicketsOffset,
 	loadMoreTicketsFunc: loadMoreTickets,
 };
 
@@ -76,7 +73,6 @@ const mapstateToProps = (state) => {
 		isStopTickets: ticketData.isStop,
 		ticketsPartCount: state.ticketsPartCount,
 		isStopFetching: state.isStopFetching,
-		error: state.error,
 	};
 };
 
@@ -86,10 +82,7 @@ TicketList.propTypes = {
 	fetchTicketsFunc: PropTypes.func.isRequired,
 	getSearchIdFunc: PropTypes.func.isRequired,
 	tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
-	initTicketsOffsetFunc: PropTypes.func.isRequired,
 	isStopTickets: PropTypes.bool.isRequired,
-	ticketsPartCount: PropTypes.number.isRequired,
 	loadMoreTicketsFunc: PropTypes.func.isRequired,
 	isStopFetching: PropTypes.bool.isRequired,
-	error: PropTypes.bool.isRequired,
 };
