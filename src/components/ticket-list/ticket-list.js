@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -12,53 +12,53 @@ import getTickets from '../../selectors';
 
 import classes from './ticket-list.module.scss';
 
-class TicketList extends Component {
-	async componentDidMount() {
-		const { getSearchIdFunc, fetchTicketsFunc } = this.props;
-		await getSearchIdFunc();
-		await fetchTicketsFunc();
-	}
+const getFullDuration = (segments) => segments.reduce((acc, item) => acc + item.duration, 0);
 
-	getFullDuration(segments) {
-		return segments.reduce((acc, item) => acc + item.duration, 0);
-	}
+const getKey = (ticketData) => `${ticketData.price}-${ticketData.carrier}-
+								${Object.values(ticketData.segments).length}-
+								${getFullDuration(ticketData.segments)}`;
 
-	getKey(ticketData) {
-		return `${ticketData.price}-${ticketData.carrier}-${
-			Object.values(ticketData.segments).length
-		}-${this.getFullDuration(ticketData.segments)}`;
-	}
+const renderTicket = (ticket) => <Ticket key={getKey(ticket)} keyVal={getKey(ticket)} {...ticket} />;
 
-	renderTicket(ticket) {
-		return <Ticket key={this.getKey(ticket)} keyVal={this.getKey(ticket)} {...ticket} />;
-	}
+const TicketList = ({
+	getSearchIdFunc,
+	fetchTicketsFunc,
+	tickets,
+	isStopTickets,
+	loadMoreTicketsFunc,
+	isStopFetching,
+}) => {
+	useEffect(() => {
+		const didMountFunc = async () => {
+			await getSearchIdFunc();
+			await fetchTicketsFunc();
+		};
 
-	render() {
-		const { tickets, isStopTickets, loadMoreTicketsFunc, isStopFetching } = this.props;
+		didMountFunc();
+	}, [getSearchIdFunc, fetchTicketsFunc]);
 
-		const isSearching = !isStopFetching ? (
-			<div className={classes['tickets-are-searching']}>Идет поиск билетов...</div>
+	const isSearching = !isStopFetching ? (
+		<div className={classes['tickets-are-searching']}>Идет поиск билетов...</div>
+	) : null;
+
+	const loadMoreBtn =
+		!isStopTickets && tickets.length > 0 ? (
+			<button type="button" className={classes['load-more-btn']} onClick={loadMoreTicketsFunc}>
+				Загрузить еще {OFFSET_PART_COUNT} билетов
+			</button>
 		) : null;
 
-		const loadMoreBtn =
-			!isStopTickets && tickets.length > 0 ? (
-				<button type="button" className={classes['load-more-btn']} onClick={loadMoreTicketsFunc}>
-					Загрузить еще {OFFSET_PART_COUNT} билетов
-				</button>
-			) : null;
+	const notFoundBlock = isStopFetching && tickets.length === 0 ? <NotFound /> : null;
 
-		const notFoundBlock = isStopFetching && tickets.length === 0 ? <NotFound /> : null;
-
-		return (
-			<ul className={classes['result-items']}>
-				{isSearching}
-				{tickets.map((item) => this.renderTicket(item))}
-				{notFoundBlock}
-				{loadMoreBtn}
-			</ul>
-		);
-	}
-}
+	return (
+		<ul className={classes['result-items']}>
+			{isSearching}
+			{tickets.map((item) => renderTicket(item))}
+			{notFoundBlock}
+			{loadMoreBtn}
+		</ul>
+	);
+};
 
 const mapDispatchToProps = {
 	fetchTicketsFunc: fetchTickets,
